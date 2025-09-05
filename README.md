@@ -1,1 +1,1 @@
-# healthy-lifestyle-test.github.io
+# healthy-lifestyle-quiz.github.io
