@@ -241,10 +241,10 @@ window.site.onRenderSinglePageApplicationPage ??= function ( page_path ) {
     };
 
     const singlePageApplicationPageHooks = {
-        "zh-Hant": window.site.onMainPage,
-        "zh-Hant/instructions": window.site.onInstructions,
-        "zh-Hant/quiz": window.site.onQuiz,
-        "zh-Hant/results": window.site.onResults,
+        "zh-Hant": onMainPage,
+        "zh-Hant/instructions": onInstructions,
+        "zh-Hant/quiz": onQuiz,
+        "zh-Hant/results": onResults,
     };
 
     if (
