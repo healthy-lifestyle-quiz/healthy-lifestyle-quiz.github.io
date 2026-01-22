@@ -191,26 +191,29 @@ window.site.singlePageApplicationPageData ??= {
         "title": "健康生活型態測驗 Healthy Lifestyle Test",
         "heading": "首頁",
         "content": "",
-        "hook": window.site.onMainPage,
     },
     "zh-Hant/instructions": {
         "title": "測驗說明 | 健康生活型態測驗 Healthy Lifestyle Test",
         "heading": "測驗說明",
         "content": "",
-        "hook": window.site.onInstructions,
     },
     "zh-Hant/quiz": {
         "title": "測驗 | 健康生活型態測驗 Healthy Lifestyle Test",
         "heading": "測驗",
         "content": "",
-        "hook": window.site.onQuiz,
     },
     "zh-Hant/results": {
         "title": "測驗結果 | 健康生活型態測驗 Healthy Lifestyle Test",
         "heading": "測驗結果",
         "content": "",
-        "hook": window.site.onResults,
     },
+};
+
+window.site.singlePageApplicationPageHooks ??= {
+    "zh-Hant": window.site.onMainPage,
+    "zh-Hant/instructions": window.site.onInstructions,
+    "zh-Hant/quiz": window.site.onQuiz,
+    "zh-Hant/results": window.site.onResults,
 };
 
 window.site.renderSinglePageApplicationPage ??= function ( page_path ) {
@@ -218,15 +221,28 @@ window.site.renderSinglePageApplicationPage ??= function ( page_path ) {
         typeof( page_path ) !== "string"
         || !( page_path in window.site.singlePageApplicationPageData )
         || !( "title" in window.site.singlePageApplicationPageData[page_path] )
+        || typeof( window.site.singlePageApplicationPageData[page_path].title ) !== "string"
         || !( "content" in window.site.singlePageApplicationPageData[page_path] )
-        || !( "hook" in window.site.singlePageApplicationPageData[page_path] )
+        || typeof( window.site.singlePageApplicationPageData[page_path].content ) !== "string"
     ) {
         return;
     }
 
     document.title = window.site.singlePageApplicationPageData[page_path].title;
     /* content = window.site.singlePageApplicationPageData[page_path].content; */
-    ( window.site.singlePageApplicationPageData[page_path].hook )();
+    window.site.onRenderSinglePageApplicationPage( page_path );
+};
+
+window.site.onRenderSinglePageApplicationPage ??= function ( page_path ) {
+    if (
+        typeof( page_path ) !== "string"
+        || !( page_path in window.site.singlePageApplicationPageHooks )
+        || typeof( window.site.singlePageApplicationPageHooks[page_path] ) !== "function"
+    ) {
+        return;
+    }
+
+    ( window.site.singlePageApplicationPageHooks[page_path] )();
 };
 
 /*
@@ -259,8 +275,8 @@ window.site.addOnClickListener ??= function () {
 
     if (
         typeof( page_path ) === "string"
-        && page_path in window.site.singlePageApplicationPageData
+        && page_path in window.site.singlePageApplicationPageHooks
     ) {
-        window.site.renderSinglePageApplicationPage( page_path );
+        window.site.onRenderSinglePageApplicationPage( page_path );
     }
 } ) ();
