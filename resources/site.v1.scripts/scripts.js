@@ -10,24 +10,51 @@ window.site.onQuiz ??= function () {
 };
 
 window.site.onResults ??= function () {
-    const paramsString = window.location.search;
-    const searchParams = new URLSearchParams( paramsString );
+    window.site.onResultsRadarChart();
+};
 
-    if ( false ) {
-        location = "https://healthy-lifestyle-quiz.github.io/v1/zh-Hant/";
+window.site.onResultsRadarChart ??= function () {
+    const radarChartValues = Object.fromEntries(
+        Array.from(
+            new URLSearchParams( window.location.search )
+        ).map( ( [ k, v ] ) =>
+            [ k, Number( v ) ]
+        ).filter( ( [ _, v ] ) =>
+            !Number.isNaN( v )
+        )
+    );
+
+    if (
+        !( "n" in radarChartValues )
+        || !( "i" in radarChartValues )
+        || !( "r" in radarChartValues )
+        || !( "a" in radarChartValues )
+        || !( "p" in radarChartValues )
+        || !( "s" in radarChartValues )
+    ) {
+        if (
+            false /* noscript query */
+        ) {
+        } else if (
+            false /* ongoing quiz */
+        ) {
+            location = "./../quiz/";
+        } else {
+            location = "./../";
+        }
     }
 
     const radarChart = echarts.init(
-        document.getElementById( 'result_chart' ),
+        document.getElementById( "result_chart" ),
         null,
         {
-            renderer: 'svg',
+            renderer: "svg",
         }
     );
 
     const radarChartOption = {
         title: {
-            text: '健康生活型態雷達圖',
+            text: "健康生活型態雷達圖",
             textStyle: {
                 fontSize: 20,
             },
@@ -40,27 +67,33 @@ window.site.onResults ??= function () {
                 },
                 indicator: [
                     {
-                        text: '適當的營養',
+                        /* n: proper nutrition */
+                        text: "適當的營養",
                         max: 5,
                     },
                     {
-                        text: '人際支持',
+                        /* i: interpersonal support */
+                        text: "人際支持",
                         max: 5,
                     },
                     {
-                        text: '健康責任',
+                        /* r: health responsibility */
+                        text: "健康責任",
                         max: 5,
                     },
                     {
-                        text: '自我實現',
+                        /* a: self-actualization */
+                        text: "自我實現",
                         max: 5,
                     },
                     {
-                        text: '運動',
+                        /* p: physical activity */
+                        text: "運動",
                         max: 5,
                     },
                     {
-                        text: '壓力處理',
+                        /* s: stress management */
+                        text: "壓力處理",
                         max: 5,
                     },
                 ],
@@ -68,19 +101,19 @@ window.site.onResults ??= function () {
         ],
         series: [
             {
-                type: 'radar',
+                type: "radar",
                 tooltip: {},
                 areaStyle: {},
                 data: [
                     {
-                        name: '健康生活型態雷達圖',
+                        name: "健康生活型態雷達圖",
                         value: [
-                            5,
-                            4,
-                            3,
-                            3.5,
-                            2,
-                            3
+                            radarChartValues.n,
+                            radarChartValues.i,
+                            radarChartValues.r,
+                            radarChartValues.a,
+                            radarChartValues.p,
+                            radarChartValues.s,
                         ],
                     },
                 ],
@@ -91,7 +124,7 @@ window.site.onResults ??= function () {
     radarChart.setOption( radarChartOption );
 
     window.addEventListener(
-        'resize',
+        "resize",
         () => {
             radarChart.resize();
         }
@@ -100,14 +133,14 @@ window.site.onResults ??= function () {
 
 window.site.addOnClickListener ??= function () {
     document.body.addEventListener(
-        'click',
+        "click",
         (event) => {
             // Find the closest <a> element (in case of nested elements)
-            let anchorElement = event.target.closest( 'a' );
+            let anchorElement = event.target.closest( "a" );
 
             if (
                 !anchorElement
-                || anchorElement.getAttribute( 'target' ) === '_blank'
+                || anchorElement.getAttribute( "target" ) === "_blank"
                 || event.ctrlKey
                 || event.metaKey
             ) {
@@ -117,40 +150,79 @@ window.site.addOnClickListener ??= function () {
             window.history.pushState(
                 null,
                 null,
-                anchorElement.getAttribute( 'href' )
+                anchorElement.getAttribute( "href" )
             );
 
-            if ( anchorElement.getAttribute( 'href' ).startsWith( '#' ) ) {
+            if ( anchorElement.getAttribute( "href" ).startsWith( "#" ) ) {
                 return;
             }
 
             event.preventDefault();
 
-            if ( anchorElement.getAttribute( 'href' ) === '' ) {
+            if ( anchorElement.getAttribute( "href" ) === "" ) {
                 return;
             };
 
             if (
-                anchorElement.getAttribute('href') === 'https://healthy-lifestyle-quiz.github.io/v1/zh-Hant/'
-                || anchorElement.getAttribute('href') === 'https://healthy-lifestyle-quiz.github.io/v1/'
-                || anchorElement.getAttribute('href') === 'https://healthy-lifestyle-quiz.github.io/'
+                anchorElement.getAttribute("href") === "https://healthy-lifestyle-quiz.github.io/v1/zh-Hant/"
+                || anchorElement.getAttribute("href") === "https://healthy-lifestyle-quiz.github.io/v1/"
+                || anchorElement.getAttribute("href") === "https://healthy-lifestyle-quiz.github.io/"
             ) {
-                document.title = '健康生活型態測驗 Healthy Lifestyle Test';
+                document.title = "健康生活型態測驗 Healthy Lifestyle Test";
             } else if (
-                anchorElement.getAttribute('href').startsWith( 'https://healthy-lifestyle-quiz.github.io' )
+                anchorElement.getAttribute("href").startsWith( "https://healthy-lifestyle-quiz.github.io" )
             ) {
-                window.open( anchorElement.getAttribute( 'href' ), '_self' );
+                window.open( anchorElement.getAttribute( "href" ), "_self" );
             } else {
-                window.open( anchorElement.getAttribute( 'href' ) );
+                window.open( anchorElement.getAttribute( "href" ) );
             };
         }
     );
 };
 
+window.site.singlePageApplicationPageData ??= {
+    "zh-Hant": {
+        "title": "健康生活型態測驗 Healthy Lifestyle Test",
+        "content": "",
+        "hook": function () {},
+    },
+    "zh-Hant/instructions": {
+        "title": "測驗說明 | 健康生活型態測驗 Healthy Lifestyle Test",
+        "content": "",
+        "hook": function () {},
+    },
+    "zh-Hant/quiz": {
+        "title": "測驗 | 健康生活型態測驗 Healthy Lifestyle Test",
+        "content": "",
+        "hook": window.site.onQuiz,
+    },
+    "zh-Hant/results": {
+        "title": "測驗結果 | 健康生活型態測驗 Healthy Lifestyle Test",
+        "content": "",
+        "hook": window.site.onResults,
+    },
+};
+
+window.site.renderSinglePageApplicationPage ??= function (page_path) {
+    if (
+        typeof(page_path) !== "string"
+        || !(page_path in window.site.singlePageApplicationPageData)
+        || !("title" in window.site.singlePageApplicationPageData[page_path])
+        || !("content" in window.site.singlePageApplicationPageData[page_path])
+        || !("hook" in window.site.singlePageApplicationPageData[page_path])
+    ) {
+        return;
+    }
+
+    document.title = window.site.singlePageApplicationPageData[page_path].title
+    /* content = window.site.singlePageApplicationPageData[page_path].content */
+    (window.site.singlePageApplicationPageData[page_path].hook)();
+};
+
 /*
 window.site.addOnClickListener ??= function () {
-    document.getElementById( 'fullscreen_enter_button' ).addEventListener(
-        'click',
+    document.getElementById( "fullscreen_enter_button" ).addEventListener(
+        "click",
         () => {
             if ( window.initialFullscreen ) {
                 return;
