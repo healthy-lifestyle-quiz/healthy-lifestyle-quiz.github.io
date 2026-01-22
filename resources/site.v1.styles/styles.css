@@ -121,6 +121,14 @@ h6 {
     background-color: var( --border-color-base, #a2a9b1 );
 }
 
+body[data-site-page-path="zh-Hant"] .site-body-header::after {
+    content: unset;
+}
+
+body[data-site-page-path="zh-Hant"] .site-first-heading {
+    display: none;
+}
+
 .site-logo {
     display: flex;
     align-items: center;

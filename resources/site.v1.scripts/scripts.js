@@ -6,6 +6,12 @@ window.site.config.page_path ??= document.body?.getAttribute("data-site-page-pat
 
 window.site.config.page_view_lang ??= document.body?.getAttribute("data-site-page-view-lang");
 
+window.site.onMainPage ??= function () {
+};
+
+window.site.onInstructions ??= function () {
+};
+
 window.site.onQuiz ??= function () {
 };
 
@@ -20,7 +26,7 @@ window.site.onResultsRadarChart ??= function () {
         ).map( ( [ k, v ] ) =>
             [ k, Number( v ) ]
         ).filter( ( [ _, v ] ) =>
-            !Number.isNaN( v )
+            !Number.isNaN( v ) && v >= 0 && v <= 5
         )
     );
 
@@ -183,21 +189,25 @@ window.site.addOnClickListener ??= function () {
 window.site.singlePageApplicationPageData ??= {
     "zh-Hant": {
         "title": "健康生活型態測驗 Healthy Lifestyle Test",
+        "heading": "首頁",
         "content": "",
-        "hook": function () {},
+        "hook": window.site.onMainPage,
     },
     "zh-Hant/instructions": {
         "title": "測驗說明 | 健康生活型態測驗 Healthy Lifestyle Test",
+        "heading": "測驗說明",
         "content": "",
-        "hook": function () {},
+        "hook": window.site.onInstructions,
     },
     "zh-Hant/quiz": {
         "title": "測驗 | 健康生活型態測驗 Healthy Lifestyle Test",
+        "heading": "測驗",
         "content": "",
         "hook": window.site.onQuiz,
     },
     "zh-Hant/results": {
         "title": "測驗結果 | 健康生活型態測驗 Healthy Lifestyle Test",
+        "heading": "測驗結果",
         "content": "",
         "hook": window.site.onResults,
     },
