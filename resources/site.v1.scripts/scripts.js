@@ -58,23 +58,27 @@ window.site.addOnClickListener ??= function () {
 window.site.renderSinglePageApplicationPage ??= function ( page_path ) {
     const firstHeading = document.getElementById("firstHeading");
 
-    const singlePageApplicationPageData = {
+    const pageData = {
         "zh-Hant": {
+            "view_lang": "zh-Hant",
             "title": "健康生活型態測驗 Healthy Lifestyle Test",
             "heading": "首頁",
             "content": "",
         },
         "zh-Hant/instructions": {
+            "view_lang": "zh-Hant",
             "title": "測驗說明 | 健康生活型態測驗 Healthy Lifestyle Test",
             "heading": "測驗說明",
             "content": "",
         },
         "zh-Hant/quiz": {
+            "view_lang": "zh-Hant",
             "title": "測驗 | 健康生活型態測驗 Healthy Lifestyle Test",
             "heading": "測驗",
             "content": "",
         },
         "zh-Hant/results": {
+            "view_lang": "zh-Hant",
             "title": "測驗結果 | 健康生活型態測驗 Healthy Lifestyle Test",
             "heading": "測驗結果",
             "content": "",
@@ -84,17 +88,22 @@ window.site.renderSinglePageApplicationPage ??= function ( page_path ) {
     if (
         firstHeading === null
         || typeof( page_path ) !== "string"
-        || !( page_path in singlePageApplicationPageData )
-        || !( "title" in singlePageApplicationPageData[page_path] )
-        || typeof( singlePageApplicationPageData[page_path].title ) !== "string"
-        || !( "content" in singlePageApplicationPageData[page_path] )
-        || typeof( singlePageApplicationPageData[page_path].content ) !== "string"
+        || !( page_path in pageData )
+        || !( "view_lang" in pageData[page_path] )
+        || typeof( pageData[page_path].view_lang ) !== "string"
+        || !( "title" in pageData[page_path] )
+        || typeof( pageData[page_path].title ) !== "string"
+        || !( "content" in pageData[page_path] )
+        || typeof( pageData[page_path].content ) !== "string"
     ) {
         return;
     }
 
-    document.title = singlePageApplicationPageData[page_path].title;
-    firstHeading.innerText = singlePageApplicationPageData[page_path].heading;
+    document.body.setAttribute( "data-site-page-view-lang", pageData[page_path].view_lang );
+    document.body.setAttribute( "data-site-page-path", page_path );
+    window.site.config.page_path = page_path;
+    document.title = pageData[page_path].title;
+    firstHeading.innerText = pageData[page_path].heading;
     /* content = singlePageApplicationPageData[page_path].content; */
     window.site.onRenderSinglePageApplicationPage( page_path );
 };
