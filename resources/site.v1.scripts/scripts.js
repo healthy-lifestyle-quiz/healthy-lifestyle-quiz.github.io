@@ -2,9 +2,9 @@ window.site ??= {};
 
 window.site.config ??= {};
 
-window.site.config.page_path ??= document.body?.getAttribute("data-site-page-path");
+window.site.config.page_path ??= document.body?.getAttribute( "data-site-page-path" );
 
-window.site.config.page_view_lang ??= document.body?.getAttribute("data-site-page-view-lang");
+window.site.config.page_view_lang ??= document.body?.getAttribute( "data-site-page-view-lang" );
 
 window.site.onMainPage ??= function () {
 };
@@ -140,7 +140,7 @@ window.site.onResultsRadarChart ??= function () {
 window.site.addOnClickListener ??= function () {
     document.body.addEventListener(
         "click",
-        (event) => {
+        ( event ) => {
             // Find the closest <a> element (in case of nested elements)
             let anchorElement = event.target.closest( "a" );
 
@@ -170,13 +170,13 @@ window.site.addOnClickListener ??= function () {
             };
 
             if (
-                anchorElement.getAttribute("href") === "https://healthy-lifestyle-quiz.github.io/v1/zh-Hant/"
-                || anchorElement.getAttribute("href") === "https://healthy-lifestyle-quiz.github.io/v1/"
-                || anchorElement.getAttribute("href") === "https://healthy-lifestyle-quiz.github.io/"
+                anchorElement.getAttribute( "href" ) === "https://healthy-lifestyle-quiz.github.io/v1/zh-Hant/"
+                || anchorElement.getAttribute( "href" ) === "https://healthy-lifestyle-quiz.github.io/v1/"
+                || anchorElement.getAttribute( "href" ) === "https://healthy-lifestyle-quiz.github.io/"
             ) {
                 document.title = "健康生活型態測驗 Healthy Lifestyle Test";
             } else if (
-                anchorElement.getAttribute("href").startsWith( "https://healthy-lifestyle-quiz.github.io" )
+                anchorElement.getAttribute( "href" ).startsWith( "https://healthy-lifestyle-quiz.github.io" )
             ) {
                 window.open( anchorElement.getAttribute( "href" ), "_self" );
             } else {
@@ -213,20 +213,20 @@ window.site.singlePageApplicationPageData ??= {
     },
 };
 
-window.site.renderSinglePageApplicationPage ??= function (page_path) {
+window.site.renderSinglePageApplicationPage ??= function ( page_path ) {
     if (
-        typeof(page_path) !== "string"
-        || !(page_path in window.site.singlePageApplicationPageData)
-        || !("title" in window.site.singlePageApplicationPageData[page_path])
-        || !("content" in window.site.singlePageApplicationPageData[page_path])
-        || !("hook" in window.site.singlePageApplicationPageData[page_path])
+        typeof( page_path ) !== "string"
+        || !( page_path in window.site.singlePageApplicationPageData )
+        || !( "title" in window.site.singlePageApplicationPageData[page_path] )
+        || !( "content" in window.site.singlePageApplicationPageData[page_path] )
+        || !( "hook" in window.site.singlePageApplicationPageData[page_path] )
     ) {
         return;
     }
 
-    document.title = window.site.singlePageApplicationPageData[page_path].title
-    /* content = window.site.singlePageApplicationPageData[page_path].content */
-    (window.site.singlePageApplicationPageData[page_path].hook)();
+    document.title = window.site.singlePageApplicationPageData[page_path].title;
+    /* content = window.site.singlePageApplicationPageData[page_path].content; */
+    ( window.site.singlePageApplicationPageData[page_path].hook )();
 };
 
 /*
@@ -238,13 +238,13 @@ window.site.addOnClickListener ??= function () {
                 return;
             }
 
-            if (document.documentElement.requestFullscreen) {
+            if ( document.documentElement.requestFullscreen ) {
                 document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) {
+            } else if ( document.documentElement.mozRequestFullScreen ) {
                 document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullScreen) {
+            } else if ( document.documentElement.webkitRequestFullScreen ) {
                 document.documentElement.webkitRequestFullScreen();
-            } else if (document.documentElement.msRequestFullscreen) {
+            } else if ( document.documentElement.msRequestFullscreen ) {
                 document.documentElement.msRequestFullscreen();
             }
 
@@ -255,29 +255,12 @@ window.site.addOnClickListener ??= function () {
 */
 
 ( function () {
-    switch ( window.site.config.page_path ) {
-        case null:
-        case undefined:
-            return;
+    const page_path = window.site?.config?.page_path;
 
-        case "zh-Hant":
-            /* window.site.addOnClickListener(); */
-
-            break;
-
-        case "zh-Hant/quiz":
-            /* window.site.addOnClickListener(); */
-            window.site.onQuiz();
-
-            break;
-
-        case "zh-Hant/results":
-            /* window.site.addOnClickListener(); */
-            window.site.onResults();
-
-            break;
-
-        default:
-            return;
+    if (
+        typeof( page_path ) === "string"
+        && page_path in window.site.singlePageApplicationPageData
+    ) {
+        window.site.renderSinglePageApplicationPage( page_path );
     }
 } ) ();
