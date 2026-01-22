@@ -217,8 +217,11 @@ window.site.singlePageApplicationPageHooks ??= {
 };
 
 window.site.renderSinglePageApplicationPage ??= function ( page_path ) {
+    const firstHeading = document.getElementById("firstHeading");
+
     if (
-        typeof( page_path ) !== "string"
+        firstHeading === null
+        || typeof( page_path ) !== "string"
         || !( page_path in window.site.singlePageApplicationPageData )
         || !( "title" in window.site.singlePageApplicationPageData[page_path] )
         || typeof( window.site.singlePageApplicationPageData[page_path].title ) !== "string"
@@ -229,6 +232,7 @@ window.site.renderSinglePageApplicationPage ??= function ( page_path ) {
     }
 
     document.title = window.site.singlePageApplicationPageData[page_path].title;
+    firstHeading.innerText = window.site.singlePageApplicationPageData[page_path].heading;
     /* content = window.site.singlePageApplicationPageData[page_path].content; */
     window.site.onRenderSinglePageApplicationPage( page_path );
 };
